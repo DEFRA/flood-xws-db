@@ -8,7 +8,7 @@ VALUES
 
 INSERT INTO xws_contact.channel(name)
 VALUES
-  ('sms'), ('voice'), ('email'), ('whatsapp'), ('xml');
+  ('sms'), ('voice'), ('email');
 
 INSERT INTO xws_contact.hazard(name)
 VALUES
