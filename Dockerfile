@@ -1,7 +1,6 @@
 FROM osgeo/gdal AS faa-data
 ARG FAA_DATA_FILE
 COPY $FAA_DATA_FILE /target-area-data/faa.zip
-COPY ./target-areas/EA_FloodAlertAreas_SHP_Full.zip /target-area-data/faa.zip
 RUN ogr2ogr --config PG_USE_COPY YES -s_srs "EPSG:27700" -a_srs "EPSG:4326" -t_srs "EPSG:4326" -f PGDump /target-area-data/faa.sql /vsizip//target-area-data/faa.zip/data/Flood_Alert_Areas.shp -lco GEOMETRY_NAME=geom -lco FID=gid -lco PRECISION=no -nlt PROMOTE_TO_MULTI -nln faa 
 
 
