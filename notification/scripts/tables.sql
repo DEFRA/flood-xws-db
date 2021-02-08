@@ -4,6 +4,17 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
  * Tables
  *********/
 
+CREATE TABLE xws_notification.alert (
+  id uuid PRIMARY KEY,
+  area_code varchar(40) NOT NULL,
+  area_name varchar(100) NOT NULL,
+  sender varchar(255) NOT NULL,
+  source varchar(255) NOT NULL,
+  alert xml NOT NULL,
+  active boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE xws_notification.message_sent (
   reference uuid PRIMARY KEY,
   alert_id uuid NOT NULL REFERENCES xws_alert.alert (id),

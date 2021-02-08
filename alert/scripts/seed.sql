@@ -1,7 +1,7 @@
 -- CAP Data
 INSERT INTO xws_alert.cap_category(name)
 		values
-      ('Geo'), ('Met'),('Safety'), ('Security'),('Rescue'),('Fire'),
+      ('Geo'),('Met'),('Safety'),('Security'),('Rescue'),('Fire'),
       ('Health'),('Env'),('Transport'),('Infra'),('CBRNE'),('Other');
 
 INSERT INTO xws_alert.cap_response_type(name)
@@ -36,10 +36,28 @@ INSERT INTO xws_alert.cap_scope(name)
 
 
 
--- Alert templates
-INSERT INTO xws_alert.alert_template(ref, name, description, cap_urgency_name, cap_severity_name, cap_certainty_name)
+-- Alert publishers, services and templates
+DO $$
+DECLARE publisher_id uuid;
+DECLARE service_id uuid;
+BEGIN
+   -- Insert the publishers
+  INSERT INTO xws_alert.publisher(id, name, url)
 		values
-      ('sfw', 'Severe flood warning', 'Severe flooding - danger to life', 'Immediate', 'Severe', 'Observed'),
-      ('fw', 'Flood warning', 'Flooding is expected - immediate action required', 'Expected', 'Moderate', 'Likely'),
-      ('fa', 'Flood alert', 'Flooding is possible - be prepared', 'Expected', 'Minor', 'Likely'),
-      ('wnlif', 'Warning no longer in force', 'The warning is no longer in force', 'Past', 'Unknown', 'Unknown');
+      ('92895119-cb53-4012-8eb9-173a22f2db7a', 'Environment Agency', 'www.gov.uk/environment-agency')
+      RETURNING id INTO publisher_id;
+
+   -- Insert the services
+  INSERT INTO xws_alert.service(id, name, description, publisher_id)
+		values
+      ('ecbb79cc-47f5-4bb0-ad0c-ca803b671cfb', 'XWS', 'Flood warning service', publisher_id)
+      RETURNING id INTO service_id;
+
+   -- Insert the templates
+   INSERT INTO xws_alert.alert_template(ref, name, description, service_id, cap_urgency_name, cap_severity_name, cap_certainty_name)
+		values
+      ('sfw', 'Severe flood warning', 'Severe flooding - danger to life', service_id, 'Immediate', 'Severe', 'Observed'),
+      ('fw', 'Flood warning', 'Flooding is expected - immediate action required', service_id, 'Expected', 'Moderate', 'Likely'),
+      ('fa', 'Flood alert', 'Flooding is possible - be prepared', service_id, 'Expected', 'Minor', 'Likely'),
+      ('wnlif', 'Warning no longer in force', 'The warning is no longer in force', service_id, 'Past', 'Unknown', 'Unknown');
+END $$;
