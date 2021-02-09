@@ -26,7 +26,7 @@ INSERT INTO xws_alert.cap_status(name)
 		values
       ('Actual'),('Exercise'),('System'),('Test'),('Draft');
 
-INSERT INTO xws_alert.cap_message_type(name)
+INSERT INTO xws_alert.cap_msg_type(name)
 		values
       ('Alert'),('Update'),('Cancel'),('Ack'),('Error');
 
@@ -54,10 +54,10 @@ BEGIN
       RETURNING id INTO service_id;
 
    -- Insert the templates
-   INSERT INTO xws_alert.alert_template(ref, name, description, service_id, cap_urgency_name, cap_severity_name, cap_certainty_name)
+   INSERT INTO xws_alert.alert_template(ref, name, description, service_id, cap_msg_type, cap_urgency_name, cap_severity_name, cap_certainty_name)
 		values
-      ('sfw', 'Severe flood warning', 'Severe flooding - danger to life', service_id, 'Immediate', 'Severe', 'Observed'),
-      ('fw', 'Flood warning', 'Flooding is expected - immediate action required', service_id, 'Expected', 'Moderate', 'Likely'),
-      ('fa', 'Flood alert', 'Flooding is possible - be prepared', service_id, 'Expected', 'Minor', 'Likely'),
-      ('wnlif', 'Warning no longer in force', 'The warning is no longer in force', service_id, 'Past', 'Unknown', 'Unknown');
+      ('sfw', 'Severe flood warning', 'Severe flooding - danger to life', service_id, 'Alert', 'Immediate', 'Severe', 'Observed'),
+      ('fw', 'Flood warning', 'Flooding is expected - immediate action required', service_id, 'Alert', 'Expected', 'Moderate', 'Likely'),
+      ('fa', 'Flood alert', 'Flooding is possible - be prepared', service_id, 'Alert', 'Expected', 'Minor', 'Likely'),
+      ('wnlif', 'Warning no longer in force', 'The warning is no longer in force', service_id, 'Cancel', 'Past', 'Unknown', 'Unknown');
 END $$;

@@ -18,11 +18,6 @@ CREATE TABLE xws_alert.user (
 );
 ALTER TABLE xws_alert.user ENABLE ROW LEVEL SECURITY;
 
--- CREATE POLICY user_policy ON xws_alert.user 
--- FOR ALL
--- USING (id::text = current_setting('request.jwt.claim.sub', FALSE))
--- WITH CHECK (id::text = current_setting('request.jwt.claim.sub', FALSE));
-
 -- Alert tables
 CREATE TABLE xws_alert.publisher (
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -46,6 +41,7 @@ CREATE TABLE xws_alert.alert_template (
 	name varchar(100) NOT NULL,
 	description varchar(255) NOT NULL,
   service_id uuid NOT NULL REFERENCES xws_alert.service (id),
+  cap_msg_type varchar(60) NOT NULL REFERENCES xws_alert.cap_msg_type (name),
   cap_urgency_name varchar(60) NOT NULL REFERENCES xws_alert.cap_urgency (name),
   cap_severity_name varchar(60) NOT NULL REFERENCES xws_alert.cap_severity (name),
   cap_certainty_name varchar(60) NOT NULL REFERENCES xws_alert.cap_certainty (name),
@@ -58,6 +54,10 @@ CREATE TABLE xws_alert.alert (
   area_code varchar(40) NOT NULL REFERENCES xws_area.area (code),
   service_id uuid NOT NULL REFERENCES xws_alert.service (id),
   alert_template_ref varchar(50) NOT NULL REFERENCES xws_alert.alert_template (ref),
+  cap_msg_type varchar(60) NOT NULL REFERENCES xws_alert.cap_msg_type (name),
+  cap_urgency_name varchar(60) NOT NULL REFERENCES xws_alert.cap_urgency (name),
+  cap_severity_name varchar(60) NOT NULL REFERENCES xws_alert.cap_severity (name),
+  cap_certainty_name varchar(60) NOT NULL REFERENCES xws_alert.cap_certainty (name),
   parent_alert_id uuid NULL REFERENCES xws_alert.alert (id),
   headline varchar(90) NOT NULL,
   body varchar(990) NOT NULL,

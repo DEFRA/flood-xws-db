@@ -34,7 +34,7 @@ CREATE TABLE xws_alert.cap_status (
 	updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE xws_alert.cap_message_type (
+CREATE TABLE xws_alert.cap_msg_type (
 	name varchar(60) NOT NULL PRIMARY KEY,
 	created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
