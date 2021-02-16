@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+
+  cf-db:
+    build:
+      context: .
+      dockerfile: DockerfileCF
+      args:
+        # Note: these data files paths are relative to the context
+        FAA_DATA_FILE: ./area/flood-areas/EA_FloodAlertAreas_SHP_Full.zip
+        FWA_DAT_FILE: ./area/flood-areas/EA_FloodWarningAreas_SHP_Full.zip
+    environment:
+      CF_API: https://api.london.cloud.service.gov.uk
+      CF_SERVICE_DB: xws-db-sandbox
+    env_file:
+      - ./cf.env
