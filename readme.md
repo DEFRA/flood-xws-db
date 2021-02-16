@@ -1,45 +1,31 @@
 # XWS DB
 
 This project currently contains the database scripts for all the XWS subsystems.
+
 These subsystems are mapped to individual postgres schema: `xws_alert`, `xws_area`, `xws_notification`, `xws_contact`. Eventually, this repo may get split into a number of separate db repos per each subsystem. Also, they may eventually be installed to separate databases.
 
 
 ## Getting started
 
-You'll need a Postgres v12 database with the PostGIS plugin installed and the `ogr2ogr` binary (alternatively, see [docker](#docker) below).
+***Docker***
 
-First, you need to import the 2 flood areas to the `public` schema using `ogr2ogr` (ensure you change or set up the PG_CONNECTION environment variable).
+It is recommended to run postgres in a docker container. The instructions for running a populated DB and all three XWS applications are found in the [development](https://github.com/NeXt-Warning-System/development) repository. The database will be populated with the alert and warning target area as well as all the schema definitions and data for each subsystem.
 
-`ogr2ogr -s_srs "EPSG:27700" -a_srs "EPSG:4326" -t_srs "EPSG:4326" -f "PostgreSQL" "PG:${PG_CONNECTION}" "/area/flood-areas/EA_FloodWarningAreas_SHP_Full/data/Flood_Warning_Areas.shp" -lco GEOMETRY_NAME=geom -lco FID=gid -lco PRECISION=no -nlt PROMOTE_TO_MULTI -nln fwa -overwrite -progress`
+***Local Install***
 
-and
+If needed, a locally installed instance of postgres can be populated using the following commands:
 
-`ogr2ogr -s_srs "EPSG:27700" -a_srs "EPSG:4326" -t_srs "EPSG:4326" -f PostgreSQL "PG:${PG_CONNECTION}" "/area/flood-areas/EA_FloodAlertAreas_SHP_Full/data/Flood_Alert_Areas.shp" -lco GEOMETRY_NAME=geom -lco FID=gid -lco PRECISION=no -nlt PROMOTE_TO_MULTI -nln faa -overwrite -progress`
+```
+  scripts/generate-area-data.sh
+  psql -Atx postgresql://postgres:postgres@localhost -f run.sql
+```
 
+`generate-area-data.sh` creates the sql from the shape files to insert the target area data for flood alerts and warnings
+ 
+Pre-requisites: Postgres v12, Plugins -  PostGIS, uuid-ossp
 
-Now connect to postgres instance using `psql`
+***PaaS service DB***
 
-`psql -Atx postgresql://username:password@host`
+`docker-compose up --build --file docker-compose-cf.yaml`
 
-At the command prompt, run
-
-`psql> \i run.sql`
-
-This will install all the tables and schemas
-
-## Docker
-
-### ogr2ogr
-
-If you'd rather not install [GDAL](https://github.com/OSGeo/gdal), you can run ogr2ogr in a docker container using the offical image.
-
-`docker pull osgeo/gdal:alpine-small-latest`
-
-Then start an interactive session using docker run. The container need access to the shape files and so we map volumes and it needs a PG_CONNECTION env var.
-
-`docker run --rm -it -e PG_CONNECTION="Enter pg connection here" -v $(pwd):/root:ro osgeo/gdal:alpine-small-latest`
-
-You can then run the two ogr2ogr commands above.
-
-### Postgres
-...
+Note: cf credential env vars (CF_USERNAME and CF_PASSWORD) should be populated using an env file called cf.env
