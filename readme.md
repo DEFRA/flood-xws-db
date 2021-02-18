@@ -7,27 +7,21 @@ These subsystems are mapped to individual postgres schema: `xws_alert`, `xws_are
 
 ## Getting started
 
+***Creating Target Area insert SQL from shape files***
+
+After cloning the repo or when the zip files in `area/flood-areas` containing the Flood Alert or Warning Areas are updated then the SQL files which insert the target areas need to be regenerated. The script `scripts/generate-area-data.sh` will need to be re-run from the repo root directory. The generated SQL files are too large to commit to Github and so are ignored by git.
+
 ***Docker***
 
 It is recommended to run postgres in a docker container. The instructions for running a populated DB and all three XWS applications are found in the [development](https://github.com/NeXt-Warning-System/development) repository. The database will be populated with the alert and warning target area as well as all the schema definitions and data for each subsystem.
 
 ***Local Install***
 
-If needed, a locally installed instance of postgres can be populated using the following commands:
-
-```
-  scripts/generate-area-data.sh
-```
-
-`generate-area-data.sh` creates the SQL from the shape files to insert the target area data for flood alerts and warnings. The SQL files it creates are referenced by the `run.sql` file (see below). After the initial run the script only needs running when the target area shape files change.
-
+Pre-requisites: Postgres v12, Plugins -  PostGIS, uuid-ossp
 
 ```
   psql -Atx postgresql://postgres:postgres@localhost -f run.sql
 ```
-
- 
-Pre-requisites: Postgres v12, Plugins -  PostGIS, uuid-ossp
 
 ***PaaS service DB***
 
