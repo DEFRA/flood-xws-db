@@ -1,13 +1,20 @@
 \cd contact/scripts
 \i run.sql
+\cd ../..
 
-\cd ../../area/scripts
+\cd area/flood-areas
+\i faa.sql
+\i fwa.sql
+\cd ../..
+
+\cd area/scripts
 \i run.sql
+\cd ../..
 
-\cd ../../alert/scripts
+\cd alert/scripts
 \i run.sql
+\cd ../..
 
-\cd ../../notification/scripts
+\cd notification/scripts
 \i run.sql
-
-\cd ../../../
+\cd ../..

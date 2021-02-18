@@ -1,45 +1,37 @@
 # XWS DB
 
 This project currently contains the database scripts for all the XWS subsystems.
+
 These subsystems are mapped to individual postgres schema: `xws_alert`, `xws_area`, `xws_notification`, `xws_contact`. Eventually, this repo may get split into a number of separate db repos per each subsystem. Also, they may eventually be installed to separate databases.
 
 
 ## Getting started
 
-You'll need a Postgres v12 database with the PostGIS plugin installed and the `ogr2ogr` binary (alternatively, see [docker](#docker) below).
+***Creating Target Area insert SQL from shape files***
 
-First, you need to import the 2 flood areas to the `public` schema using `ogr2ogr` (ensure you change or set up the PG_CONNECTION environment variable).
+After cloning the repo or when the zip files in `area/flood-areas` containing the Flood Alert or Warning Areas are updated then the SQL files which insert the target areas need to be regenerated. The script `scripts/generate-area-data.sh` will need to be re-run from the repo root directory. The generated SQL files are too large to commit to Github and so are ignored by git.
 
-`ogr2ogr -s_srs "EPSG:27700" -a_srs "EPSG:4326" -t_srs "EPSG:4326" -f "PostgreSQL" "PG:${PG_CONNECTION}" "/area/flood-areas/EA_FloodWarningAreas_SHP_Full/data/Flood_Warning_Areas.shp" -lco GEOMETRY_NAME=geom -lco FID=gid -lco PRECISION=no -nlt PROMOTE_TO_MULTI -nln fwa -overwrite -progress`
+The shape zip files come from:
 
-and
+* https://data.gov.uk/dataset/0d901c4a-6e1a-4f9a-9408-73e0c1f49dd3/flood-warning-areas
+* https://data.gov.uk/dataset/7749e0a6-08fb-4ad8-8232-4e41da74a248/flood-alert-areas
 
-`ogr2ogr -s_srs "EPSG:27700" -a_srs "EPSG:4326" -t_srs "EPSG:4326" -f PostgreSQL "PG:${PG_CONNECTION}" "/area/flood-areas/EA_FloodAlertAreas_SHP_Full/data/Flood_Alert_Areas.shp" -lco GEOMETRY_NAME=geom -lco FID=gid -lco PRECISION=no -nlt PROMOTE_TO_MULTI -nln faa -overwrite -progress`
+***Docker***
 
+It is recommended to run postgres in a docker container. The instructions for running a populated DB and all three XWS applications are found in the [development](https://github.com/NeXt-Warning-System/development) repository. The database will be populated with the alert and warning target area as well as all the schema definitions and data for each subsystem.
 
-Now connect to postgres instance using `psql`
+***Local Install***
 
-`psql -Atx postgresql://username:password@host`
+Pre-requisites: Postgres v12, Plugins -  PostGIS, uuid-ossp
 
-At the command prompt, run
+```
+  psql -Atx postgresql://postgres:postgres@localhost -f run.sql
+```
 
-`psql> \i run.sql`
+***PaaS service DB***
 
-This will install all the tables and schemas
+To populate the PaaS service DB run the following command:
 
-## Docker
+`docker build --file DockerfileCF . -t cf-db && docker run --env-file ./cf.env cf-db`
 
-### ogr2ogr
-
-If you'd rather not install [GDAL](https://github.com/OSGeo/gdal), you can run ogr2ogr in a docker container using the offical image.
-
-`docker pull osgeo/gdal:alpine-small-latest`
-
-Then start an interactive session using docker run. The container need access to the shape files and so we map volumes and it needs a PG_CONNECTION env var.
-
-`docker run --rm -it -e PG_CONNECTION="Enter pg connection here" -v $(pwd):/root:ro osgeo/gdal:alpine-small-latest`
-
-You can then run the two ogr2ogr commands above.
-
-### Postgres
-...
+Note: cf env vars are populated using an env file which you will need to create (see cf.env.sample for the env vars which need populationg)
