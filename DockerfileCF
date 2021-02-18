@@ -1,21 +1,10 @@
-FROM osgeo/gdal AS faa-data
-ARG FAA_DATA_FILE
-COPY $FAA_DATA_FILE /target-area-data/faa.zip
-RUN ogr2ogr --config PG_USE_COPY YES -s_srs "EPSG:27700" -a_srs "EPSG:4326" -t_srs "EPSG:4326" -f PGDump /target-area-data/faa.sql /vsizip//target-area-data/faa.zip/data/Flood_Alert_Areas.shp -lco GEOMETRY_NAME=geom -lco FID=gid -lco PRECISION=no -nlt PROMOTE_TO_MULTI -nln faa 
-
-
-FROM osgeo/gdal AS fwa-data
-ARG FWA_DATA_FILE
-COPY $FWA_DATA_FILE /target-area-data/fwa.zip
-RUN ogr2ogr --config PG_USE_COPY YES -s_srs "EPSG:27700" -a_srs "EPSG:4326" -t_srs "EPSG:4326" -f PGDump target-area-data/fwa.sql /vsizip//target-area-data/fwa.zip/data/Flood_Warning_Areas.shp -lco GEOMETRY_NAME=geom -lco FID=gid -lco PRECISION=no -nlt PROMOTE_TO_MULTI -nln fwa 
-
 FROM governmentpaas/cf-cli AS cf-cli
 RUN apk add --no-cache postgresql-client
 RUN cf install-plugin -f -r CF-Community conduit
 ENV PATH=${PATH}:/scripts
 WORKDIR /db-init-scripts
-COPY --from=faa-data /target-area-data/faa.sql .
-COPY --from=fwa-data /target-area-data/fwa.sql .
+COPY area/flood-areas/faa.sql .
+COPY area/flood-areas/fwa.sql .
 COPY scripts/populate-db .
 COPY scripts/populate-service-db .
 COPY scripts/setup.sql .

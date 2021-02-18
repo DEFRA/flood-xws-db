@@ -17,15 +17,22 @@ If needed, a locally installed instance of postgres can be populated using the f
 
 ```
   scripts/generate-area-data.sh
+```
+
+`generate-area-data.sh` creates the SQL from the shape files to insert the target area data for flood alerts and warnings. The SQL files it creates are referenced by the `run.sql` file (see below). After the initial run the script only needs running when the target area shape files change.
+
+
+```
   psql -Atx postgresql://postgres:postgres@localhost -f run.sql
 ```
 
-`generate-area-data.sh` creates the sql from the shape files to insert the target area data for flood alerts and warnings
  
 Pre-requisites: Postgres v12, Plugins -  PostGIS, uuid-ossp
 
 ***PaaS service DB***
 
-`docker-compose up --build --file docker-compose-cf.yaml`
+To populate the PaaS service DB run the following command:
 
-Note: cf credential env vars (CF_USERNAME and CF_PASSWORD) should be populated using an env file called cf.env
+`docker build --file DockerfileCF . -t cf-db && docker run --env-file ./cf.env cf-db`
+
+Note: cf env vars are populated using an env file which you will need to create (see cf.env.sample for the env vars which need populationg)
