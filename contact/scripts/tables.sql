@@ -47,24 +47,14 @@ CREATE TABLE xws_contact.location_type (
 	updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE xws_contact.location (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-	ref varchar(255) NOT NULL,
-  location_type_name varchar(40) NOT NULL REFERENCES xws_contact.location_type (name),
-	name varchar(255) NOT NULL,
-	geom geometry,
-	centroid geometry,
-	created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE xws_contact.subscription (
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   contact_id uuid NOT NULL REFERENCES xws_contact.contact (id),
-  location_id uuid NOT NULL REFERENCES xws_contact.location (id),
+  area_code varchar(40) NOT NULL,
+  area_name varchar(100) NOT NULL,
+  area_type_ref varchar(25) NOT NULL,
   channel_name varchar(100) NOT NULL REFERENCES xws_contact.channel (name),
   wnlif bool NOT NULL DEFAULT FALSE,
-  alerts bool NOT NULL DEFAULT FALSE,
   created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -91,7 +81,6 @@ CREATE TABLE xws_contact.subscription (
 --   SELECT ar.code, ar.name, ar.region, ar.description, ar.area_type_ref, art.name as "area_type_name"
 --   FROM xws_alert.area ar
 --   JOIN xws_alert.area_type art ON art.ref = ar.area_type_ref;
-
 
 
 
