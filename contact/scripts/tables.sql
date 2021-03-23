@@ -50,9 +50,7 @@ CREATE TABLE xws_contact.location_type (
 CREATE TABLE xws_contact.subscription (
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   contact_id uuid NOT NULL REFERENCES xws_contact.contact (id),
-  area_code varchar(40) NOT NULL,
-  area_name varchar(100) NOT NULL,
-  area_type_ref varchar(25) NOT NULL,
+  area_code varchar(40) NOT NULL REFERENCES xws_area.area (code),
   channel_name varchar(100) NOT NULL REFERENCES xws_contact.channel (name),
   wnlif bool NOT NULL DEFAULT FALSE,
   created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -81,8 +79,4 @@ CREATE TABLE xws_contact.subscription (
 --   SELECT ar.code, ar.name, ar.region, ar.description, ar.area_type_ref, art.name as "area_type_name"
 --   FROM xws_alert.area ar
 --   JOIN xws_alert.area_type art ON art.ref = ar.area_type_ref;
-
-
-
-
 

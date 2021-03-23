@@ -6,11 +6,14 @@ pushd /db-init-scripts
 
 psql -v ON_ERROR_STOP=1 -f faa.sql 
 psql -v ON_ERROR_STOP=1 -f fwa.sql 
-psql -v ON_ERROR_STOP=1 -f setup.sql 
+psql -v ON_ERROR_STOP=1 -f before.sql 
 
-pushd contact && psql -v ON_ERROR_STOP=1 -f run.sql && popd
 pushd area && psql -v ON_ERROR_STOP=1 -f run.sql && popd
+pushd contact && psql -v ON_ERROR_STOP=1 -f run.sql && popd
 pushd alert && psql -v ON_ERROR_STOP=1 -f run.sql && popd
 pushd notification && psql -v ON_ERROR_STOP=1 -f run.sql && popd
 
+psql -v ON_ERROR_STOP=1 -f after.sql
+
 popd
+
