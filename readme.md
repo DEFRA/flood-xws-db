@@ -18,7 +18,7 @@ The shape zip files come from:
 
 ***Docker***
 
-It is recommended to run postgres in a docker container. The instructions for running a populated DB and all three XWS applications are found in the [development](https://github.com/NeXt-Warning-System/development) repository. The database will be populated with the alert and warning target area as well as all the schema definitions and data for each subsystem.
+It is recommended to run postgres in a docker container. The instructions for running a populated DB and all three XWS applications are found in the [flood-xws-development](https://github.com/DEFRA/flood-xws-development) repository. The database will be populated with the alert and warning target area as well as all the schema definitions and data for each subsystem.
 
 ***Local Install***
 
