@@ -8,7 +8,10 @@ CREATE SCHEMA IF NOT EXISTS xws_rest;
 
 CREATE VIEW xws_rest.area AS
   SELECT code, region, name, description
-  FROM xws_area.area;
+  FROM xws_area.area
+  -- See https://github.com/PostgREST/postgrest-docs/issues/366 for reason for setting OFFSET
+  -- TL/DR - it stops update methods (POST/PUT/DELETE) being generated in swagger
+  OFFSET NULL;
 
 CREATE VIEW xws_rest.contact AS
   SELECT id, value, active, contact_kind_name AS "contactKindName", contact_type_name AS "contactTypeName", hazard_name AS "hazardName"
