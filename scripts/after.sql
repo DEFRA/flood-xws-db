@@ -25,8 +25,8 @@ CREATE role web_anon NOLOGIN;
 
 GRANT usage ON SCHEMA xws_rest TO web_anon;
 GRANT SELECT ON xws_rest.area TO web_anon;
-GRANT SELECT, UPDATE, INSERT ON xws_rest.contact TO web_anon;
-GRANT SELECT, UPDATE, INSERT ON xws_rest.subscription TO web_anon;
+GRANT SELECT, UPDATE, INSERT, DELETE ON xws_rest.contact TO web_anon;
+GRANT SELECT, UPDATE, INSERT, DELETE ON xws_rest.subscription TO web_anon;
 
 CREATE ROLE authenticator NOINHERIT LOGIN PASSWORD 'authenticator';
 GRANT web_anon TO authenticator;
