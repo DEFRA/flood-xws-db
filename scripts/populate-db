@@ -4,9 +4,10 @@ set -e
 
 pushd /db-init-scripts
 
+psql -v ON_ERROR_STOP=1 -f before.sql
+
 psql -v ON_ERROR_STOP=1 -f faa.sql 
 psql -v ON_ERROR_STOP=1 -f fwa.sql 
-psql -v ON_ERROR_STOP=1 -f before.sql 
 
 pushd area && psql -v ON_ERROR_STOP=1 -f run.sql && popd
 pushd contact && psql -v ON_ERROR_STOP=1 -f run.sql && popd
