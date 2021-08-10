@@ -21,6 +21,7 @@ CREATE VIEW xws_rest.subscription AS
   SELECT id, contact_id AS "contactId", area_code AS "areaCode", channel_name AS "channelName", wnlif
   FROM xws_contact.subscription;
 
+DROP role IF EXISTS web_anon;
 CREATE role web_anon NOLOGIN;
 
 GRANT usage ON SCHEMA xws_rest TO web_anon;
@@ -28,5 +29,6 @@ GRANT SELECT ON xws_rest.area TO web_anon;
 GRANT SELECT, UPDATE, INSERT, DELETE ON xws_rest.contact TO web_anon;
 GRANT SELECT, UPDATE, INSERT, DELETE ON xws_rest.subscription TO web_anon;
 
+DROP role IF EXISTS authenticator;
 CREATE ROLE authenticator NOINHERIT LOGIN PASSWORD 'authenticator';
 GRANT web_anon TO authenticator;
