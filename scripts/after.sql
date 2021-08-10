@@ -30,5 +30,5 @@ GRANT SELECT, UPDATE, INSERT, DELETE ON xws_rest.contact TO web_anon;
 GRANT SELECT, UPDATE, INSERT, DELETE ON xws_rest.subscription TO web_anon;
 
 DROP role IF EXISTS authenticator;
-CREATE ROLE authenticator NOINHERIT LOGIN PASSWORD 'authenticator';
+CREATE ROLE authenticator NOINHERIT LOGIN PASSWORD 'U5XKDJvdOZktUc8B';
 GRANT web_anon TO authenticator;
