@@ -25,13 +25,15 @@ exec: true     # Enable running commands in your container.
 variables:
   #Note: hard coded service discovery value (flood-xws-contact.local)
   #      should use the env var COPILOT_SERVICE_DISCOVERY_ENDPOINT
-  PGRST_DB_URI:  "postgres://authenticator:authenticator@xws-db.flood-xws-contact.local:5432/postgres"
   PGRST_DB_SCHEMA: xws_rest
   PGRST_DB_ANON_ROLE: web_anon
   PGRST_SERVER_PORT: 3000
 
 #variables:                    # Pass environment variables as key value pairs.
 #  LOG_LEVEL: info
+
+secrets:                      # Pass secrets from AWS Systems Manager (SSM) Parameter Store.
+  PGRST_DB_URI: /flood-xws-contact/test/xws-contact-api/PGRST_DB_URI
 
 #secrets:                      # Pass secrets from AWS Systems Manager (SSM) Parameter Store.
 #  GITHUB_TOKEN: GITHUB_TOKEN  # The key is the name of the environment variable, the value is the name of the SSM parameter.
